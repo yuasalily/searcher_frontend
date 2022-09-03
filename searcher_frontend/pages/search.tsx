@@ -19,7 +19,9 @@ export async function getServerSideProps() {
     const res = await fetch(process.env.SAMPLE_HOST)
     const data = await res.json()
     const solr_res = await fetch(process.env.SOLR_HOST)
-    const solr_data = await solr_res.json()[0]
+    const solr_data_ = await solr_res.json()
+
+    const solr_data = solr_data_.response.docs[0]
     console.log(solr_data)
 
     // Pass data to the page via props
