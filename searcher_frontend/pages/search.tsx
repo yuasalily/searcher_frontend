@@ -2,20 +2,26 @@ import {fetch} from "next/dist/compiled/@edge-runtime/primitives/fetch";
 
 
 // ref:https://bobbyhadz.com/blog/typescript-binding-element-implicitly-has-an-any-type
-export default function Search({data}:any){
+export default function Search({data, solr_data}:any){
     return (
         <div>
-            Hello Searcher, {data.name}
+            <p>Hello Searcher, {data.name}</p>
+            <p>Solr id: {solr_data.id}</p>
+            <p>Solr key: {solr_data.key}</p>
         </div>
     )
 }
 
 // This gets called on every request
-export async function getStaticProps() {
+export async function getServerSideProps() {
     // Fetch data from external API
-    const res = await fetch('http://localhost:3000/api/hello')
+    console.log(process.env.SOLR_HOST)
+    const res = await fetch(process.env.SAMPLE_HOST)
     const data = await res.json()
+    const solr_res = await fetch(process.env.SOLR_HOST)
+    const solr_data = await solr_res.json()[0]
+    console.log(solr_data)
 
     // Pass data to the page via props
-    return { props: { data } }
+    return { props: { data, solr_data } }
 }
